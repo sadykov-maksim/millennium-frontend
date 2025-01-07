@@ -1,0 +1,31 @@
+version: "3.9"
+name: millennium-frontend
+
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node_app
+    volumes:
+      - ./service:/usr/src/app
+      - ./certificates:/etc/certificates
+    networks:
+      - service
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./certificates:/etc/certificates
+    networks:
+      - service
+
+networks:
+  service:
+    driver: bridge
